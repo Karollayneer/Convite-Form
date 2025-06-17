@@ -1,0 +1,59 @@
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(to bottom, #FFD700, #FF8C00, #FF69B4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.convite {
+    background-color: #4b2c0d;
+    color: gold;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 0 20px orange;
+    text-align: center;
+    max-width: 400px;
+    width:100%;
+}
+
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 8px;
+    border: none;
+    
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #c67edb;
+    border: none;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.link-admin {
+    color: white;
+    font-size: 14px;
+    text-decoration: underline;
+}
+.botao-excluir {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    font-size: 12px;
+    border-radius: 5px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+.info{
+    font-size: 14px;
+    width: 110%;
+}

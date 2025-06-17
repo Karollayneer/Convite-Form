@@ -1,0 +1,26 @@
+<!DOCTYPE html>  
+<html lang="pt-br">  
+<head>  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <title>Convite Tardezinha</title>  
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">  
+</head>  
+<body>  
+    <div class="convite">  
+        <h1>Tardezinha da Anne</h1>  
+        <p class="info">📅 13/09/2025 &nbsp;&nbsp; 🕒 15h &nbsp;&nbsp;📍 Rua piraquara Nº1209</p>  
+
+        {% if mensagem_confirmacao %}  
+            <p class="mensagem">{{ mensagem_confirmacao }}</p>  
+        {% endif %}  
+
+        <form action="/confirmar" method="post">  
+            <input type="text" name="nome" placeholder="Digite seu nome" required>  
+            <button type="submit">Confirmar Presença</button>  
+        </form>  
+
+        <br>  
+        <a href="{{ url_for('login') }}" class="link-admin">Acesso do Aniversariante</a>  
+    </div>  
+</body>  
+</html>  
