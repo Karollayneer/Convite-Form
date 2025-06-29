@@ -1,13 +1,25 @@
+import os
 from flask import Flask, render_template, request, redirect, url_for, session # type: ignore
-import sqlite3
+from flask_sqlalchemy import SQLAlchemy # type: ignore
 
 app = Flask(__name__)
 app.secret_key = 'chave_super_secreta'
 
-# Conectar ao banco
-def conectar():
-    return sqlite3.connect('banco.db')
+# Configuração do banco: variável de ambiente DATABASE_URL ou fallback para SQLite
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
+    'DATABASE_URL', 
+    'sqlite:///banco.db'
+)
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+db = SQLAlchemy(app)
+
+# Modelo do banco
+class Convidado(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    nome = db.Column(db.String(100), nullable=False)
+
+# Rotas
 @app.route('/')
 def index():
     mensagem_confirmacao = session.pop('mensagem_confirmacao', '')
@@ -17,11 +29,9 @@ def index():
 def confirmar():
     nome = request.form['nome'].strip()
     if nome:
-        con = conectar()
-        cur = con.cursor()
-        cur.execute('INSERT INTO convidados (nome) VALUES (?)', (nome,))
-        con.commit()
-        con.close()
+        novo = Convidado(nome=nome)
+        db.session.add(novo)
+        db.session.commit()
         session['mensagem_confirmacao'] = f"{nome}, 🥳 sua presença foi confirmada!🎉"
     return redirect(url_for('index'))
 
@@ -41,23 +51,18 @@ def login():
 def confirmados():
     if not session.get('logado'):
         return redirect(url_for('login'))
-    con = conectar()
-    cur = con.cursor()
-    cur.execute('SELECT id, nome FROM convidados')
-    nomes = cur.fetchall()
+    nomes = Convidado.query.all()
     total = len(nomes)
-    con.close()
     return render_template('confirmados.html', nomes=nomes, total=total)
 
 @app.route('/excluir/<int:id>', methods=['POST'])
 def excluir(id):
     if not session.get('logado'):
         return redirect(url_for('login'))
-    con = conectar()
-    cur = con.cursor()
-    cur.execute('DELETE FROM convidados WHERE id = ?', (id,))
-    con.commit()
-    con.close()
+    convidado = Convidado.query.get(id)
+    if convidado:
+        db.session.delete(convidado)
+        db.session.commit()
     return redirect(url_for('confirmados'))
 
 @app.route('/logout')
@@ -66,12 +71,6 @@ def logout():
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
-    # Criar tabela se não existir
-    con = conectar()
-    cur = con.cursor()
-    cur.execute('''CREATE TABLE IF NOT EXISTS convidados (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    nome TEXT NOT NULL)''')
-    con.commit()
-    con.close()
+    with app.app_context():
+        db.create_all()
     app.run(debug=True)
