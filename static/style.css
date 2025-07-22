@@ -15,7 +15,8 @@ body {
     border-radius: 20px;
     box-shadow: 0 0 20px orange;
     text-align: center;
-    max-width: 400px;
+    max-width: 500px;
+    overflow-y: auto; 
     width:100%;
 }
 
