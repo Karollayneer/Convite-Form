@@ -57,3 +57,15 @@ button {
     font-size: 14px;
     width: 110%;
 }
+
+.confm {
+    background-color: #4b2c0d;
+    color: gold;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 0 20px orange;
+    text-align: center;
+    max-width: 500px;
+    width:100%;
+    overflow-y: auto;
+}
